@@ -6,7 +6,6 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d/features2d.hpp>
-#include <opencv2/nonfree/features2d.hpp>
 
 #include "fmf.h"
 #include "tracker.h"
@@ -35,26 +34,43 @@ int main(int argc, char *argv[]) {
 
     const char* WIN_RF = "Reference";
     const char* WIN_PROC = "Processed";
+    int scalefactor = 3; // scaling factor for display
     cv::namedWindow(WIN_RF, CV_WINDOW_AUTOSIZE);
  //   cv::namedWindow(WIN_PROC, CV_WINDOW_AUTOSIZE);
 
-    Tracker tracker;
-    cv::Mat currframe;
-    cout << "Displaying frames" << std::endl;
-    int scalefactor = 3; // scaling factor for display
+    cout << "Computing background..." << endl;
+    Background bg;
+    cv::Mat frame = fmfreader.readFrame(0);
+    bg.init(frame);
+    for (int i = 1; i < fmfreader.getNFrames(); ++i) {
+        frame = fmfreader.readFrame(i);
+        bg.addFrame(frame);
+    }
+    cv::Mat background;
+    bg.getBackground(background);
 
+    Tracker tracker;
+    tracker.setBackground(background);
+    cv::Mat currframe;
+    cout << "Computing fly positions..." << endl;
     for (int i = 0; i < fmfreader.getNFrames(); ++i) {
         //currframe = frames[i];
         currframe = fmfreader.readFrame(i);
-        tracker.addFrame(currframe);
-        tracker.drawCurrent(currframe);
-        displayScaled(WIN_RF, currframe, scalefactor);
 
-        cout << "Showing frame " << i << " with N=" ;
-        cout << tracker.getCurrentNumObjects() << endl;
-        cout << tracker.getCurrentPositions() << endl;
+        tracker.addFrame(currframe);
+    }
+    cout << "Computing fly trajectories..." << endl;
+    tracker.assignIdentities();
+
+    cout << "Displaying fly trajectories..." << endl;
+    for (int i = 0; i < fmfreader.getNFrames(); ++i) {
+        TrackerState state = tracker.getState(i);
+        currframe = fmfreader.readFrame(i);
+        tracker.drawFrame(state, currframe);
+        cout << "Showing frame " << i << " with N=" << state.numobs << endl;
+        displayScaled(WIN_RF, currframe, scalefactor);
 //        displayScaled(WIN_PROC, fmask, scalefactor);
-        cv::waitKey(10);
+        cv::waitKey(100);
     }
     cv::waitKey(0);
 }
