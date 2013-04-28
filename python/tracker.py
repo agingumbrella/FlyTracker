@@ -155,20 +155,22 @@ def getNewID():
 def tracking(history):
 	output = []
 #	for i in range(len(history)):
-	for i in range(5):
+	nframe = 0
+	for i in range(2,5):
 		print "Frame %d" % i
 		currStates = history[i]
 		# initialize flies with ID
-		if i == 0:
+		if nframe == 0:
 			flies = {}
 			for ell in currStates:
 				ell.ID = getNewID()
 				flies[ell.ID] = ell	
-		elif i == 1:
-			flies = findFlies(output[i-1], output[i-1], currStates)
+		elif nframe == 1:
+			flies = findFlies(output[nframe-1], output[nframe-1], currStates)
 		else:
-			flies = findFlies(output[i-2], output[i-1], currStates)			
+			flies = findFlies(output[nframe-2], output[nframe-1], currStates)			
 		output.append(flies)
+		nframe += 1
 	return output
 
 def main():
