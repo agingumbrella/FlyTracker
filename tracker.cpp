@@ -108,7 +108,7 @@ void Tracker::updateState(const vector<cv::Point2f>& currpos, const vector<cv::R
     currstate_ = TrackerState(nframes_, currpos.size());
     for (int i = 0; i < currpos.size(); ++i) {
         // give each fly an ID of 0
-        FlyState obs(-1, currpos[i], currellipse[i]);
+        ObsState obs(-1, currpos[i], currellipse[i]);
         currstate_.obs.push_back(obs);
     }
     history_.push_back(currstate_);
@@ -153,13 +153,16 @@ void Tracker::computeTrajectories() {
 void Tracker::assignIdentities() {
 
     int ntrue = 19; // true number from first frame
-    double maxcost = 100.0;
-
+    double maxcost = 10000;
     // initialize kalman filters
     vector<cv::KalmanFilter> filters;
     int dynamicParams = 4;
     int measureParams = 2;
-    for (int i = 0; i < ntrue; ++i) {
+
+    vector<InferredState> predstate;
+
+    // Kalman filter stuff
+/*    for (int i = 0; i < ntrue; ++i) {
         cv::KalmanFilter KF(dynamicParams, measureParams);
         KF.transitionMatrix = *(cv::Mat_<float>(4, 4) << 1,0,1,0,   0,1,0,1,  0,0,1,0,  0,0,0,1);
         KF.statePre.at<float>(0) = history_[0].obs[i].pos.x;
@@ -170,72 +173,196 @@ void Tracker::assignIdentities() {
         setIdentity(KF.processNoiseCov, cv::Scalar::all(1e-4));
         setIdentity(KF.measurementNoiseCov, cv::Scalar::all(1e-1));
         setIdentity(KF.errorCovPost, cv::Scalar::all(.1));
-        filters.push_back(KF);
-    }
 
-    for (int t = 0; t < 1; ++t) {
+        // add first inferred position
+        KF.predict();
+        cv::Mat prediction = KF.statePost;
+        PredictedState temp(i, KF.statePost.at<float>(1), KF.statePost.at<float>(0));
+        history_[0].inferred.push_back(temp);
+        filters.push_back(KF);
+    }*/
+    for (int i = 0; i < ntrue; ++i) {
+        // initialize inferred state with observed for first frame
+        InferredState temp(i, history_[0].obs[i].pos.x, history_[0].obs[i].pos.y);
+        history_[0].inferred.push_back(temp);
+        // initialize predicted state with observed for first frame
+        predstate.push_back(temp);
+    }
+    boost::progress_display display(nframes_);
+    for (int t = 1; t < nframes_; ++t) {
         // at each time step q_t have K' observations
         // have K x K' matrix
 
         int nobs = history_[t].numobs; // number observed
-//        int N = max(ntrue, nobs);
-        int N = ntrue + nobs;
-        // turn into N x N matrix where N = max(K,K'),
-        // by adding dummy variables for additional objects and for removed objects
-        cv::Mat weights = cv::Mat::zeros(N, N, CV_64FC1);
 
-        // set costs
         cv::Mat costs = cv::Mat::zeros(nobs, ntrue, CV_64FC1);
+        // set costs
         for (int i = 0; i < ntrue; ++i) {
-            cv::KalmanFilter kf = filters[i];
-            const cv::Mat predpos = kf.predict();
+            cv::Point2f predpos = predstate[i].pos;
             for (int j = 0; j < nobs; ++j) {
                 cv::Point2f obspos = history_[t].obs[j].pos;
-                costs.at<double>(j,i) = (double) pow(predpos.at<float>(0) - obspos.x,2) + pow(predpos.at<float>(1) - obspos.y,2);
+                costs.at<double>(j,i) = (double) pow(predpos.x - obspos.x,2) + pow(predpos.y - obspos.y,2);
             }
         }
+        vector<int> obsfortarget;
+        vector<bool> isunassigned;
+        matchFlies(costs, maxcost, obsfortarget, isunassigned);
+        cout << "t=" << t << ": Assigned=";
+        for (int i = 0; i < obsfortarget.size(); ++i) {
+            cout << i << "->" << obsfortarget[i] << ", ";
+        }
+        cout << endl;
 
-        // set up weights
-        // set top left of matrix to costs
-        for (int i = 0; i < nobs; ++i) {
-            for (int j = 0; j < ntrue; ++j) {
-                weights.at<double>(i,j) = (double) costs.at<double>(i,j);
-            }
-        }
-        // set top right of matrix to maxcost
-        for (int i = 0; i < nobs; ++i) {
-            for (int j = ntrue; j < N; ++j) {
-                weights.at<double>(i,j) = maxcost;
-            }
-        }
-        // set bottom left to maxcost
-        for (int i = nobs; i < N; ++i) {
-            for (int j = 0; j < ntrue; ++j) {
-                weights.at<double>(i,j) = maxcost;
-            }
-        }
-        for (int i = 0; i < N; ++i) {
-            for (int  j = 0; j < N; ++j) {
-                cout << weights.at<double>(i,j) << ", ";
-            }
-            cout << endl;
-        }
-        // compute maximal weight bipartite matching on matrix
-        vector<int> target2obs;
-        vector<int> obs2target;
-//        hungarian(weights, target2obs, obs2target);
-        //cout << target2obs[0] << endl;
         // conditional on assignments from Hungarian algorithm, perform kalman filter update
         // where objects assigned to dummy observations don't perform a measurement update
+
+        // update inferred
+        set<int> incurrframe;
+        // copy those that are observed
+        for (int i = 0; i < nobs; ++i) {
+            int currtarget = obsfortarget[i];
+            if (currtarget >= 0) {
+                ObsState obstemp = history_[t].obs[currtarget];
+                InferredState inftemp(currtarget, obstemp.pos);
+                history_[t].inferred.push_back(inftemp);
+                incurrframe.insert(currtarget);
+            }
+        }
+        // copy other pos from previous frame
+        for (int i = 0; i < ntrue; ++i) {
+            if (incurrframe.count(i) == 0) {
+                InferredState obstemp = history_[t-1].inferred[i];
+                history_[t].inferred.push_back(obstemp);
+            }
+        }
+        // update predictions with linear velocity prediction
+ //       predstate.clear();
+        for (int i = 0; i < ntrue; ++i) {
+            cv::Point2f newpos;
+            newpos.x = history_[t].inferred[i].pos.x + (history_[t].inferred[i].pos.x - history_[t-1].inferred[i].pos.x);
+            newpos.y = history_[t].inferred[i].pos.y + (history_[t].inferred[i].pos.y - history_[t-1].inferred[i].pos.y);
+            InferredState temp(i, newpos);
+//            predstate.push_back(temp);
+        }
+        ++display;
     }
 }
 
-void Tracker::predictFlyState() {
-    // XXX Will fail if lose any flies in the first two frames
-    if (nframes_ < 2) {
-        prediction_ = currstate_.obs;
-    } else {
+void Tracker::saveHistory(const char *fname) {
+    ofstream file;
+    file.open(fname);
+    for (int t = 0; t < history_.size(); ++t) {
+        file << t << " ";
+        file << history_[t].numobs << " ";
+        for (int i = 0; i < history_[t].obs.size(); ++i) {
+            ObsState currobs = history_[t].obs[i];
+            file << currobs.ellipse.angle << ":" << currobs.ellipse.center.x << ":" << currobs.ellipse.center.y << ":" << currobs.ellipse.size.width << ":" << currobs.ellipse.size.height << " ";
+        }
+        file << endl;
     }
+    file.close();
+}
+
+void Tracker::matchFlies(const cv::Mat &costs, double maxCost, vector<int> &obsfortarget, vector<bool> &isunassigned) {
+    // set up weights
+    // set top left of matrix to costs
+    int ntargets = costs.cols;
+    int nobs = costs.rows;
+
+    // try greedy assignment
+    obsfortarget.resize(ntargets);
+    vector<double> mincosts(ntargets);
+    for (int i = 0; i < nobs; ++i) {
+        double mincost = 1E14;
+        for (int j = 0; j < ntargets; ++j) {
+            if (costs.at<double>(i,j) < mincost) {
+                mincost = costs.at<double>(i,j);
+                mincosts[j] = mincost;
+                obsfortarget[j] = i;
+            }
+        }
+    }
+    for (int i = 0; i < ntargets; ++i) {
+        if (mincosts[i] > maxCost) {
+            obsfortarget[i] = -1;
+        }
+    }
+
+    bool isconflict = false;
+    isunassigned.clear();
+    isunassigned.resize(ntargets);
+    for (int i = 0; i < ntargets; ++i) {
+        isunassigned[i] = true;
+    }
+
+    for (int i = 0; i < ntargets; ++i) {
+        if (obsfortarget[i] < 0) {
+            continue;
+        }
+        if (!isunassigned[obsfortarget[i]]) {
+            isconflict = true;
+        }
+        isunassigned[obsfortarget[i]] = false;
+    }
+    if (!isconflict) {
+        cout << "Using brute force" << endl;
+        return;
+    }
+
+//  int N = max(ntrue, nobs);
+    int N = ntargets + nobs;
+
+    // turn into N x N matrix where N = max(K,K'),
+    // by adding dummy variables for additional objects and for removed objects
+    cv::Mat weights = cv::Mat::zeros(N, N, CV_64FC1);
+
+    // if greedy assignment doesn't work, start over...
+    for (int i = 0; i < nobs; ++i) {
+        for (int j = 0; j < ntargets; ++j) {
+            weights.at<double>(i,j) = (double) costs.at<double>(i,j);
+        }
+    }
+    // set top right of matrix to maxcost
+    for (int i = 0; i < nobs; ++i) {
+        for (int j = ntargets; j < N; ++j) {
+            weights.at<double>(i,j) = maxCost;
+        }
+    }
+    // set bottom left to maxcost
+    for (int i = nobs; i < N; ++i) {
+        for (int j = 0; j < ntargets; ++j) {
+            weights.at<double>(i,j) = maxCost;
+        }
+    }
+    // compute maximal weight bipartite matching on matrix
+    vector<int> targetforobs;
+    obsfortarget.clear();
+    hungarian(weights, targetforobs, obsfortarget);
+
+    // remove dummy target nodes
+    vector<int> temp;
+    for (int i = 0; i < ntargets; ++i) {
+        temp.push_back(obsfortarget[i]);
+    }
+    obsfortarget.swap(temp);
+
+    // unassigned observations (assigned to dummy nodes)
+    temp.clear();
+    isunassigned.clear();
+    for (int i = 0; i < nobs; ++i) {
+        if (targetforobs[i] >= ntargets) {
+            isunassigned.push_back(true);
+        } else {
+            isunassigned.push_back(false);
+        }
+    }
+
+    for (int i = 0; i < obsfortarget.size(); ++i) {
+        if (obsfortarget[i] > nobs) {
+            obsfortarget[i] = -1;
+        }
+    }
+    return;
 }
 
 void Tracker::drawCurrent(cv::Mat &img) {
@@ -258,8 +385,12 @@ void Tracker::drawFrame(const TrackerState& state, cv::Mat& img) {
     for (int i = 0; i < state.obs.size(); ++i) {
         cv::circle(img, state.obs[i].pos, 5, cv::Scalar(0,255,0), 5);
         cv::ellipse(img, state.obs[i].ellipse, cv::Scalar(0,0,255), 2, 8);
-        string label = boost::lexical_cast<string>(state.obs[i].ID);
-        cv::putText(img, label, state.obs[i].pos, fontFace, fontScale, cv::Scalar(255,255,255),thickness);
+    }
+
+    for (int i = 0; i < state.inferred.size(); ++i) {
+        cv::circle(img, state.inferred[i].pos, 5, cv::Scalar(255,0,0), 5);
+        string label = boost::lexical_cast<string>(state.inferred[i].ID);
+        cv::putText(img, label, state.inferred[i].pos, fontFace, fontScale, cv::Scalar(255,255,255),thickness);
     }
 }
 

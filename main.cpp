@@ -56,12 +56,13 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < fmfreader.getNFrames(); ++i) {
         //currframe = frames[i];
         currframe = fmfreader.readFrame(i);
-
         tracker.addFrame(currframe);
     }
-    cout << "Computing fly trajectories..." << endl;
-    tracker.assignIdentities();
-
+    cout << "Saving fly positions..." << endl;
+    tracker.saveHistory("/home/jlab/history.txt");
+    //cout << "Computing fly trajectories..." << endl;
+    //tracker.assignIdentities();
+    /*
     cout << "Displaying fly trajectories..." << endl;
     for (int i = 0; i < fmfreader.getNFrames(); ++i) {
         TrackerState state = tracker.getState(i);
@@ -69,9 +70,10 @@ int main(int argc, char *argv[]) {
         tracker.drawFrame(state, currframe);
         cout << "Showing frame " << i << " with N=" << state.numobs << endl;
         displayScaled(WIN_RF, currframe, scalefactor);
-//        displayScaled(WIN_PROC, fmask, scalefactor);
-        cv::waitKey(100);
+        cv::waitKey(0);
     }
     cv::waitKey(0);
+    */
+    return 1;
 }
 

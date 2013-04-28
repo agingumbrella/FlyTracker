@@ -1,9 +1,10 @@
 #ifndef TRACKER_H
 #define TRACKER_H
 #include <vector>
+#include <fstream>
 #include <iostream>
 #include <string>
-#include <map>
+#include <set>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d/features2d.hpp>
@@ -13,6 +14,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/progress.hpp>
 
 #include "hungarian/hungarian.h"
 
@@ -21,12 +23,22 @@ typedef vector<cv::Point> Contour;
 typedef vector<Contour> ContourVector;
 
 
-struct FlyState
+struct InferredState
 {
-    FlyState() : ID(-1) {}
-    FlyState(int _ID, cv::Point2f _obs_pos, cv::RotatedRect _ellipse)
+    InferredState(int _ID, float x, float y) : ID(_ID), pos(cv::Point2f(x,y)) {}
+    InferredState(int _ID, cv::Point2f _obs_pos) : ID(_ID), pos(_obs_pos) {}
+    InferredState() : ID(-1) {}
+
+    virtual ~InferredState() {}
+    int ID;
+    cv::Point2f pos;
+};
+struct ObsState
+{
+    ObsState() : ID(-1) {}
+    ObsState(int _ID, cv::Point2f _obs_pos, cv::RotatedRect _ellipse)
         : ID(_ID), pos(_obs_pos), ellipse( _ellipse) {}
-    virtual ~FlyState() {}
+    virtual ~ObsState() {}
 
     // Fly ID
     int ID;
@@ -48,7 +60,9 @@ struct TrackerState
     // number of observed objects in state
     int numobs;
     // vector of current observations
-    vector<FlyState> obs;
+    vector<ObsState> obs;
+    // vector of current inferred positions
+    vector<InferredState> inferred;
 };
 
 class Background
@@ -105,6 +119,8 @@ public:
     // DON'T USE -- SLOW
     //void computeMedianBackgroundModel();
 
+    void saveHistory(const char* fname);
+
 private:
     void findCentroids(const ContourVector& contours, vector<cv::Point2f> &currpos);
     void findEllipses(const ContourVector& contours, vector<cv::RotatedRect> &currellipse);
@@ -113,10 +129,12 @@ private:
 
     void updateState(const vector<cv::Point2f>& currpos, const vector<cv::RotatedRect>& currellipse);
 
-    // Try to assign current flies to flies in previous frame
+    // match flies with distances specified by cost matrix
+    void matchFlies(const cv::Mat& costs, double maxCost, vector<int>& obs2target, vector<bool>& isunassigned);
 
-    // Try to predict positions and anglesfor each fly, given previous positions
-    void predictFlyState();
+    // find flies in current frame given past two successive frames
+
+    // Try to assign current flies to flies in previous frame
 
 private:
     // use vibe background subtractor
@@ -136,9 +154,6 @@ private:
 
     // Past states
     vector<TrackerState> history_;
-
-    // predicted position of each fly in next frame
-    vector<FlyState> prediction_;
 
     cv::Mat background_;
 
