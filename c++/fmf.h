@@ -1,11 +1,8 @@
 #ifndef FMF_H
 #define FMF_H
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/mman.h>
-#include <sys/types.h>
+#include <cstdio>
+#include <string>
 
 #include <vector>
 #include <opencv2/opencv.hpp>
@@ -49,9 +46,8 @@ class FMFReader
 {
 public:
     FMFReader();
-    FMFReader(const char* fname);
     virtual ~FMFReader();
-    void open(const char* fname);
+    int open(const char* fname);
     void close();
     cv::Mat readFrame(int frame);
     vector<cv::Mat> readFrames();

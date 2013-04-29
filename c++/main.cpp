@@ -3,15 +3,17 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d/features2d.hpp>
+
+#include <sys/stat.h>
 
 #include "fmf.h"
 #include "tracker.h"
 
 using namespace std;
-const char* testfile = "/home/jlab/Documents/WillData/or83bGal420130422_172747.fmf";
 
 void displayScaled(const char* winName, cv::Mat& currFrame, int scaleFactor) {
     cv::Mat resized;
@@ -22,11 +24,33 @@ void displayScaled(const char* winName, cv::Mat& currFrame, int scaleFactor) {
 }
 
 int main(int argc, char *argv[]) {
+    string fname;
+    string outname;
     cv::setUseOptimized(true);
     cv::setNumThreads(8);
+    if (argc == 3) {
+        cout << "Reading " << argv[1] << " and saving to " << argv[2] << endl;
+        fname = string(argv[1]);
+        outname = string(argv[2]);
+    } else {
+        cout << "Two arguments expected" << endl;
+		exit(0);
+    }
 
+    ifstream f(fname.c_str());
+    struct stat sts;
+    if (!f.good()) {
+        cout << "Input file " << fname << " not found" << endl;
+        exit(0);
+    }
+    f.close();
+
+    FMFReader fmfreader;
+    if (fmfreader.open(fname.c_str()) == -1) {
+        cout << "Input file " << fname << " not found" << endl;
+        exit(0);
+    }
     cout << "Loading movie info..." << endl;
-    FMFReader fmfreader(testfile);
     cout << "Num frames: " << fmfreader.getNFrames() << endl;
     cout << "Width: " << fmfreader.getWidth() << ", Height: " << fmfreader.getHeight() << endl;
     cout << "Loading all frames.." << std::endl;
@@ -57,9 +81,11 @@ int main(int argc, char *argv[]) {
         //currframe = frames[i];
         currframe = fmfreader.readFrame(i);
         tracker.addFrame(currframe);
+        displayScaled(WIN_RF, currframe, scalefactor);
+        cv::waitKey(1);
     }
     cout << "Saving fly positions..." << endl;
-    tracker.saveHistory("/home/jlab/history.txt");
+    tracker.saveHistory(outname.c_str());
     //cout << "Computing fly trajectories..." << endl;
     //tracker.assignIdentities();
     /*

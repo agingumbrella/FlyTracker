@@ -5,11 +5,6 @@ FMFReader::FMFReader()
 {
 }
 
-FMFReader::FMFReader(const char* fname)
-    : is_opened_(false)
-{
-    open(fname);
-}
 
 FMFReader::~FMFReader() {
     if (header_.isoddcols) {
@@ -21,11 +16,11 @@ FMFReader::~FMFReader() {
     }
 }
 
-void FMFReader::open(const char *fname) {
+int FMFReader::open(const char *fname) {
     fmffp_ = fopen(fname, "rb");
     if (fmffp_ == 0) {
         fprintf(stderr, "Could not open input fmf file %s for reading.\n", fname);
-        return;
+        return -1;
     }
     is_opened_ = true;
     readHeader();
@@ -38,6 +33,7 @@ void FMFReader::open(const char *fname) {
         fread(&curr_timestamp, sizeof(double), 1, fmffp_);
         timestamps_.push_back(curr_timestamp);
     }
+    return 1;
 }
 
 void FMFReader::close() {
