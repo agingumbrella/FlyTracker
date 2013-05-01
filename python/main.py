@@ -32,9 +32,25 @@ def displayScaled(winName, img, scaleFactor):
 def main():
 	# parse options
 	# TODO implement adding commandline flags
-	movieFilename = "/home/jlab/Documents/WillData/or83bGal420130422_172747.fmf"	
-	dataFilename = "/home/jlab/history.txt"
-	
+	if len(sys.argv) == 3:
+		movieFilename = sys.argv[1]
+		dataFilename = sys.argv[2]
+	#movieFilename = "/home/jlab/Documents/WillData/or83bGal420130422_172747.fmf"
+	#dataFilename = "/home/jlab/history.txt"
+
+	# init display
+	cv2.startWindowThread()
+	WIN_RF = "Display"
+	cv2.namedWindow(WIN_RF)
+
+	# load video
+	fmf = FlyMovie(movieFilename)
+
+	print "Loading movie info..."
+	nframes = fmf.compute_n_frames_from_file_size()
+	print "Num frames: %d" % nframes
+	print "Width: %d, Height: %d" % (fmf.get_width(), fmf.get_height())
+
 	# load tracker data
 	tracker = Tracker()
 	history = tracker.loadData(dataFilename)
@@ -42,14 +58,7 @@ def main():
 	# tracking algorithm	
 	tracked_pos = tracker.track()
 
-	# load video
-	cv2.startWindowThread()
-	WIN_RF = "Display"
-	cv2.namedWindow(WIN_RF)
 
-
-	fmf = FlyMovie(movieFilename)
-	nframes = fmf.compute_n_frames_from_file_size()
 
 	scaleFactor = 3
 	for i in range(1,nframes):
@@ -62,6 +71,5 @@ def main():
 		displayScaled(WIN_RF, currframe, scaleFactor)
 		key = cv2.waitKey(0)
 
-			
 if __name__ == "__main__":
 	main()

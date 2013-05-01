@@ -19,6 +19,7 @@ FMFReader::~FMFReader() {
 int FMFReader::open(const char *fname) {
     fmffp_ = fopen(fname, "rb");
     if (fmffp_ == 0) {
+        perror("Couldn't open file\n");
         fprintf(stderr, "Could not open input fmf file %s for reading.\n", fname);
         return -1;
     }

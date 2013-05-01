@@ -37,13 +37,12 @@ int main(int argc, char *argv[]) {
 		exit(0);
     }
 
-    ifstream f(fname.c_str());
-    struct stat sts;
-    if (!f.good()) {
-        cout << "Input file " << fname << " not found" << endl;
-        exit(0);
-    }
-    f.close();
+    //ifstream f(fname.c_str());
+    //if (!f.good()) {
+     //   cout << "Input file " << fname << " not found" << endl;
+//        exit(0);
+    //}
+    //f.close();
 
     FMFReader fmfreader;
     if (fmfreader.open(fname.c_str()) == -1) {
@@ -68,6 +67,8 @@ int main(int argc, char *argv[]) {
     bg.init(frame);
     for (int i = 1; i < fmfreader.getNFrames(); ++i) {
         frame = fmfreader.readFrame(i);
+        displayScaled(WIN_RF, frame, 3);
+        cv::waitKey(10);
         bg.addFrame(frame);
     }
     cv::Mat background;

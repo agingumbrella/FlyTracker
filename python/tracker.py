@@ -6,7 +6,6 @@ from hungarian import hungarian
 def dist2(obs, pred):
 	return ((pred.center[0] - obs.center[0])**2 + (pred.center[1] - obs.center[1])**2)
 
-	
 class Ellipse:
 	def __init__(self, ID=None, angle=None, center=None, size=None, isDummy=False):
 		self.ID = ID
@@ -128,7 +127,6 @@ class Tracker:
 		obs_for_target, unass_obs = self.matchFlies(cost, maxCost)
 		print "Best matches:", obs_for_target
 		print "Num unassigned obs:", np.sum(unass_obs)
-	
 		# make a  dictionary with best matches for each prediction
 		flies = {}
 		for tt in range(len(targets)):
@@ -159,13 +157,13 @@ class Tracker:
 				flies = {}
 				for ell in currStates:
 					ell.ID = self.getNewID()
-					flies[ell.ID] = ell		
+					flies[ell.ID] = ell
 				print "targ (%d) = %s"%(len(flies), str(flies))
 				print "obs (%d) = %s"%(len(currStates), str(currStates))
 			elif nframe == 1:
 				flies = self.findFlies(output[nframe-1], output[nframe-1], currStates)
 			else:
-				flies = self.findFlies(output[nframe-2], output[nframe-1], currStates)	
+				flies = self.findFlies(output[nframe-2], output[nframe-1], currStates)
 			output.append(flies)
 			nframe += 1
 		return output
@@ -174,4 +172,3 @@ class Tracker:
 		self.numID += 1
 		return self.numID
 
-	
