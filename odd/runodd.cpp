@@ -10,8 +10,11 @@
 #include <time.h>
 #include <math.h>
 #include <signal.h>
-#include <zmq.h>
 #include <assert.h>
+
+#include <iostream>
+#include <zmq.hpp>
+#include <sstream>
 
 #define MAX_ODOURS_PER_LINE 5
 #define MAX_ODOUR_PORTS 8
@@ -116,28 +119,6 @@ void dataReset(int blankOdor) {
   return;
 }
 
-int odorPulses(char* configFileName) {
-  mask[0] = 0xFF; // sets first 8 ports to output
-  mask[1] = 0x3; // sets ports 8 and 9 for output, 10 and 11 for input. Port 11 is reserved for the trigger and port 10 can be CPIO
-
-  // time
-  time_t sec;
-  sec = time(NULL);
- 
-  //if ((fi = fopen(configFileName, "r")) == NULL) {
-//    return(-1);
- // }
-  int j, port;
-  int odors[15];
-  int stimTimes[15];
-  int delayTimes[15];
-  for (int i = 0; i < 15; ++i)  {
-    odors[i] = i+1;
-    stimTimes[i] = 1;
-    delayTimes[i] = 2;
-  }
-}
-
 int pulseSingleOdor(int odorNum, int stimTime, int delayTime, int blankOdor) {
   int port = odorNum/BITS_PER_PORT;
 
@@ -178,23 +159,37 @@ int main(int argc, char** argv) {
     }
   }
   
-  // Actual program
+  // main program
   AIOUSB_SetCommTimeout( device->index, 1000 );
   int tmp, ret;
   tmp = init();
- // for (int i = 0; i < 16; ++i) {
-  //  pulseSingleOdor(i, 1, 2, 0);
-  //}
-  void* context = zmq_ctx_new();
-  void* subscriber = zmq_socket(context, ZMQ_SUB);
-  int rc = zmq_bind(subscriber, "ipc:///tmp/runodd.pipe");
-  assert(rc == 0);
+  int blank = -1;
+
+  // init zmq and listen to port 5556 over TCP
+  zmq::context_t context(1);
+  zmq::socket_t subscriber(context, ZMQ_SUB);
+  subscriber.connect("tcp://localhost:5556");
+
+  const char* filter ="";
+  subscriber.setsockopt(ZMQ_SUBSCRIBE, filter, strlen(filter));
+
+  // main loop:
+  // Block until something is receieved on port 5556
+  // The data will come in the form:
+  // odor stim delay blank 
+  // which is then parsed into the appropriate variables, and used to control 
+  // the ODD. (Pretty simple.)
+  int odor, stim, delay, blank;
   while (1) {
-    char buffer[10];
-    zmq_recv(subscriber, buffer, 10, 0);
-    printf(buffer);
-    sleep(1);
+    zmq::message_t update;
+    subscriber.recv(&update);
+    std::cout << "Received odor request at " << time(NULL) << std::endl;
+    std::istringstream iss(static_cast<char*>(update.data()));
+    std::cout << static_cast<char*>(update.data()) << std::endl;
+    iss >> odor >> stim >> delay >> blank;
+    pulseSingleOdor(odor, stim, delay, blank);   
   }
+
   return 0;
 }
 
