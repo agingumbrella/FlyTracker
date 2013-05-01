@@ -1,0 +1,296 @@
+running build
+running build_ext
+building 'BackgroundSubtractor' extension
+gcc -pthread -fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -fPIC -I/usr/include/python2.7 -c background/background.cpp -o build/temp.linux-i686-2.7/background/background.o
+cc1plus: warning: command line option ‘-Wstrict-prototypes’ is valid for Ada/C/ObjC but not for C++ [enabled by default]
+background/background.cpp: In member function ‘std::vector<cv::Point_<float> > BGSubtractor::getCurrentPositions()’:
+background/background.cpp:70:45: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+background/background.cpp: In member function ‘std::vector<cv::RotatedRect> BGSubtractor::getCurrentEllipses()’:
+background/background.cpp:78:45: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+background/background.cpp: In member function ‘void BGSubtractor::updateState(const std::vector<cv::Point_<float> >&, const std::vector<cv::RotatedRect>&)’:
+background/background.cpp:90:38: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+background/background.cpp: In member function ‘void BGSubtractor::findCentroids(const ContourVector&, std::vector<cv::Point_<float> >&)’:
+background/background.cpp:100:39: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+background/background.cpp:105:39: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+background/background.cpp: In member function ‘void BGSubtractor::findEllipses(const ContourVector&, std::vector<cv::RotatedRect>&)’:
+background/background.cpp:112:39: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+background/background.cpp: In member function ‘void BGSubtractor::saveHistory(const char*)’:
+background/background.cpp:134:39: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+background/background.cpp:137:50: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+/usr/include/python2.7/numpy/__multiarray_api.h: At global scope:
+/usr/include/python2.7/numpy/__multiarray_api.h:1532:1: warning: ‘int _import_array()’ defined but not used [-Wunused-function]
+background/npinterface.h:9:18: warning: ‘opencv_error’ defined but not used [-Wunused-variable]
+background/npinterface.h:66:12: warning: ‘int failmsg(const char*, ...)’ declared ‘static’ but never defined [-Wunused-function]
+background/npinterface.h:78:12: warning: ‘int pyopencv_to(const PyObject*, cv::Mat&, const char*, bool)’ declared ‘static’ but never defined [-Wunused-function]
+background/npinterface.h:79:18: warning: ‘PyObject* pyopencv_from(const cv::Mat&)’ declared ‘static’ but never defined [-Wunused-function]
+gcc -pthread -fno-strict-aliasing -DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes -fPIC -I/usr/include/python2.7 -c background/npinterface.cpp -o build/temp.linux-i686-2.7/background/npinterface.o
+cc1plus: warning: command line option ‘-Wstrict-prototypes’ is valid for Ada/C/ObjC but not for C++ [enabled by default]
+In file included from /usr/include/python2.7/numpy/ndarraytypes.h:7:0,
+                 from /usr/include/python2.7/numpy/ndarrayobject.h:17,
+                 from background/npinterface.h:4,
+                 from background/npinterface.cpp:1:
+/usr/include/python2.7/numpy/npy_common.h:85:2: error: #error Must use Python with unicode enabled.
+In file included from /usr/include/python2.7/numpy/ndarraytypes.h:7:0,
+                 from /usr/include/python2.7/numpy/ndarrayobject.h:17,
+                 from background/npinterface.h:4,
+                 from background/npinterface.cpp:1:
+/usr/include/python2.7/numpy/npy_common.h:731:9: error: ‘npy_uint16’ does not name a type
+/usr/include/python2.7/numpy/npy_common.h:732:9: error: ‘npy_half’ does not name a type
+In file included from /usr/include/python2.7/numpy/ndarrayobject.h:17:0,
+                 from background/npinterface.h:4,
+                 from background/npinterface.cpp:1:
+/usr/include/python2.7/numpy/ndarraytypes.h:256:9: error: ‘Py_intptr_t’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:257:9: error: ‘Py_uintptr_t’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:377:9: error: ‘PyObject’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:378:35: error: typedef ‘PyArray_SetItemFunc’ is initialized (use decltype instead)
+/usr/include/python2.7/numpy/ndarraytypes.h:378:35: error: ‘PyObject’ was not declared in this scope
+/usr/include/python2.7/numpy/ndarraytypes.h:378:45: error: expected primary-expression before ‘,’ token
+/usr/include/python2.7/numpy/ndarraytypes.h:378:47: error: expected primary-expression before ‘void’
+/usr/include/python2.7/numpy/ndarraytypes.h:378:55: error: expected primary-expression before ‘void’
+/usr/include/python2.7/numpy/ndarraytypes.h:380:46: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:380:64: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:381:38: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:393:38: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:393:48: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:395:40: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:395:58: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:396:32: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:398:56: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:405:32: error: typedef ‘PyArray_ScanFunc’ is initialized (use decltype instead)
+/usr/include/python2.7/numpy/ndarraytypes.h:405:32: error: ‘FILE’ was not declared in this scope
+/usr/include/python2.7/numpy/ndarraytypes.h:405:38: error: ‘fp’ was not declared in this scope
+/usr/include/python2.7/numpy/ndarraytypes.h:405:42: error: expected primary-expression before ‘void’
+/usr/include/python2.7/numpy/ndarraytypes.h:406:32: error: expected primary-expression before ‘char’
+/usr/include/python2.7/numpy/ndarraytypes.h:406:46: error: expected primary-expression before ‘struct’
+/usr/include/python2.7/numpy/ndarraytypes.h:410:40: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:412:40: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:413:43: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:413:55: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:415:50: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:419:47: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:421:62: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:422:54: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:423:60: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:424:40: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:424:60: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:425:40: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:425:59: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:429:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:448:9: error: ‘PyArray_GetItemFunc’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:449:9: error: ‘PyArray_SetItemFunc’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:481:9: error: ‘PyArray_ScanFunc’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:521:9: error: ‘PyObject’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:573:9: error: ‘PyObject_HEAD’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:596:9: error: ‘PyObject’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:601:9: error: ‘PyObject’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:611:9: error: ‘PyObject’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:616:9: error: ‘PyObject’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:626:9: error: ‘PyObject_HEAD’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:629:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:630:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:634:9: error: ‘PyObject’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:651:9: error: ‘PyObject’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:660:9: error: ‘PyObject_HEAD’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:668:9: error: ‘PyObject_HEAD’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:671:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:709:53: error: ‘PyObject’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:883:39: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:954:66: error: ‘npy_intp’ has not been declared
+/usr/include/python2.7/numpy/ndarraytypes.h:957:9: error: ‘PyObject_HEAD’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:959:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:960:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:961:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:962:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:963:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:964:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:969:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:970:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:971:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1109:9: error: ‘PyObject_HEAD’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1111:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1112:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1114:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1163:9: error: ‘PyObject_HEAD’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1171:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1173:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1175:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1193:9: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1195:9: error: ‘PyObject’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1210:5: error: ‘PyObject_HEAD’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1216:5: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1217:5: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1218:5: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1219:5: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1220:5: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1221:5: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1226:5: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1227:5: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1228:5: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1234:5: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1237:5: error: ‘npy_intp’ does not name a type
+In file included from /usr/include/python2.7/numpy/ndarraytypes.h:1272:0,
+                 from /usr/include/python2.7/numpy/ndarrayobject.h:17,
+                 from background/npinterface.h:4,
+                 from background/npinterface.cpp:1:
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h: In function ‘int _PyArrayNeighborhoodIter_IncrCoord(PyArrayNeighborhoodIterObject*)’:
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:40:5: error: ‘npy_intp’ was not declared in this scope
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:40:14: error: expected ‘;’ before ‘i’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:42:10: error: ‘i’ was not declared in this scope
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:42:20: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘nd’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:43:9: error: ‘wb’ was not declared in this scope
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:43:9: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘coordinates’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:43:9: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘bounds’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:43:9: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘coordinates’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:43:9: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘coordinates’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:43:9: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘bounds’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h: In function ‘int _PyArrayNeighborhoodIter_IncrCoord2D(PyArrayNeighborhoodIterObject*)’:
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:55:5: error: ‘npy_intp’ was not declared in this scope
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:55:14: error: expected ‘;’ before ‘wb’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:57:5: error: ‘wb’ was not declared in this scope
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:57:5: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘coordinates’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:57:5: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘bounds’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:57:5: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘coordinates’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:57:5: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘coordinates’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:57:5: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘bounds’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:58:5: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘coordinates’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:58:5: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘bounds’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:58:5: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘coordinates’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:58:5: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘coordinates’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:58:5: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘bounds’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h: In function ‘int PyArrayNeighborhoodIter_Next(PyArrayNeighborhoodIterObject*)’:
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:71:69: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘coordinates’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h: In function ‘int PyArrayNeighborhoodIter_Reset(PyArrayNeighborhoodIterObject*)’:
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:82:5: error: ‘npy_intp’ was not declared in this scope
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:82:14: error: expected ‘;’ before ‘i’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:84:10: error: ‘i’ was not declared in this scope
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:84:27: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘nd’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:85:15: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘coordinates’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:85:38: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘bounds’
+/usr/include/python2.7/numpy/_neighborhood_iterator_imp.h:87:69: error: ‘struct PyArrayNeighborhoodIterObject’ has no member named ‘coordinates’
+In file included from /usr/include/python2.7/numpy/ndarrayobject.h:17:0,
+                 from background/npinterface.h:4,
+                 from background/npinterface.cpp:1:
+/usr/include/python2.7/numpy/ndarraytypes.h: At global scope:
+/usr/include/python2.7/numpy/ndarraytypes.h:1477:5: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1482:5: error: ‘npy_intp’ does not name a type
+/usr/include/python2.7/numpy/ndarraytypes.h:1486:5: error: ‘PyObject’ does not name a type
+In file included from /usr/include/python2.7/numpy/ndarrayobject.h:26:0,
+                 from background/npinterface.h:4,
+                 from background/npinterface.cpp:1:
+/usr/include/python2.7/numpy/__multiarray_api.h:770:27: error: ‘NULL’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h: In function ‘int _import_array()’:
+/usr/include/python2.7/numpy/__multiarray_api.h:1535:3: error: ‘PyObject’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1535:13: error: ‘numpy’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1535:66: error: ‘PyImport_ImportModule’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1536:13: error: ‘c_api’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1536:21: error: ‘NULL’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1539:23: error: ‘PyExc_ImportError’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1539:82: error: ‘PyErr_SetString’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1542:53: error: ‘PyObject_GetAttrString’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1543:18: error: ‘Py_DECREF’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1545:23: error: ‘PyExc_AttributeError’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1545:67: error: ‘PyErr_SetString’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1557:29: error: ‘PyCObject_Check’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1558:23: error: ‘PyExc_RuntimeError’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1558:79: error: ‘PyErr_SetString’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1562:51: error: ‘PyCObject_AsVoidPtr’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1566:23: error: ‘PyExc_RuntimeError’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1566:71: error: ‘PyErr_SetString’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1572:20: error: ‘PyExc_RuntimeError’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1574:67: error: ‘PyErr_Format’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1578:20: error: ‘PyExc_RuntimeError’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1580:82: error: ‘PyErr_Format’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1590:20: error: ‘PyExc_RuntimeError’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1590:82: error: ‘PyErr_Format’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1601:20: error: ‘PyExc_RuntimeError’ was not declared in this scope
+/usr/include/python2.7/numpy/__multiarray_api.h:1602:75: error: ‘PyErr_Format’ was not declared in this scope
+In file included from background/npinterface.cpp:1:0:
+background/npinterface.h: At global scope:
+background/npinterface.h:9:8: error: ‘PyObject’ does not name a type
+background/npinterface.h:20:2: error: ‘PyThreadState’ does not name a type
+background/npinterface.h: In constructor ‘PyAllowThreads::PyAllowThreads()’:
+background/npinterface.h:14:21: error: class ‘PyAllowThreads’ does not have any field named ‘_state’
+background/npinterface.h:14:46: error: ‘PyEval_SaveThread’ was not declared in this scope
+background/npinterface.h: In destructor ‘PyAllowThreads::~PyAllowThreads()’:
+background/npinterface.h:17:24: error: ‘_state’ was not declared in this scope
+background/npinterface.h:17:30: error: ‘PyEval_RestoreThread’ was not declared in this scope
+background/npinterface.h: At global scope:
+background/npinterface.h:32:2: error: ‘PyGILState_STATE’ does not name a type
+background/npinterface.h: In constructor ‘PyEnsureGIL::PyEnsureGIL()’:
+background/npinterface.h:26:18: error: class ‘PyEnsureGIL’ does not have any field named ‘_state’
+background/npinterface.h:26:43: error: ‘PyGILState_Ensure’ was not declared in this scope
+background/npinterface.h: In destructor ‘PyEnsureGIL::~PyEnsureGIL()’:
+background/npinterface.h:29:22: error: ‘_state’ was not declared in this scope
+background/npinterface.h:29:28: error: ‘PyGILState_Release’ was not declared in this scope
+background/npinterface.h: At global scope:
+background/npinterface.h:59:45: error: ‘PyObject’ was not declared in this scope
+background/npinterface.h:59:54: error: expected primary-expression before ‘)’ token
+background/npinterface.h:59:55: error: expected ‘)’ before numeric constant
+background/npinterface.h:60:77: error: expected ‘)’ before ‘;’ token
+background/npinterface.h:68:15: error: ‘PyObject’ does not name a type
+background/npinterface.h:73:47: error: ‘PyObject’ does not name a type
+background/npinterface.h:73:57: error: ISO C++ forbids declaration of ‘obj’ with no type [-fpermissive]
+background/npinterface.h:78:30: error: ‘PyObject’ does not name a type
+background/npinterface.h:78:40: error: ISO C++ forbids declaration of ‘o’ with no type [-fpermissive]
+background/npinterface.h:79:8: error: ‘PyObject’ does not name a type
+background/npinterface.cpp: In function ‘int failmsg(const char*, ...)’:
+background/npinterface.cpp:7:5: error: ‘va_list’ was not declared in this scope
+background/npinterface.cpp:7:13: error: expected ‘;’ before ‘ap’
+background/npinterface.cpp:8:14: error: ‘ap’ was not declared in this scope
+background/npinterface.cpp:8:21: error: ‘va_start’ was not declared in this scope
+background/npinterface.cpp:9:40: error: ‘vsnprintf’ was not declared in this scope
+background/npinterface.cpp:10:14: error: ‘va_end’ was not declared in this scope
+background/npinterface.cpp:12:21: error: ‘PyExc_TypeError’ was not declared in this scope
+background/npinterface.cpp:12:41: error: ‘PyErr_SetString’ was not declared in this scope
+background/npinterface.cpp: In member function ‘virtual void NumpyAllocator::allocate(int, const int*, int, int*&, uchar*&, uchar*&, size_t*)’:
+background/npinterface.cpp:29:3: error: ‘npy_intp’ was not declared in this scope
+background/npinterface.cpp:29:12: error: expected ‘;’ before ‘_sizes’
+background/npinterface.cpp:32:4: error: ‘_sizes’ was not declared in this scope
+background/npinterface.cpp:40:5: error: ‘_sizes’ was not declared in this scope
+background/npinterface.cpp:43:3: error: ‘PyObject’ was not declared in this scope
+background/npinterface.cpp:43:13: error: ‘o’ was not declared in this scope
+background/npinterface.cpp:43:17: error: expected primary-expression before ‘)’ token
+background/npinterface.cpp:43:17: error: ‘PyTypeObject’ was not declared in this scope
+background/npinterface.cpp:43:17: error: expected primary-expression before ‘,’ token
+background/npinterface.cpp:43:17: error: expected primary-expression before ‘int’
+background/npinterface.cpp:43:17: error: expected primary-expression before ‘,’ token
+background/npinterface.cpp:43:17: error: expected primary-expression before ‘int’
+background/npinterface.cpp:43:17: error: expected primary-expression before ‘,’ token
+background/npinterface.cpp:43:17: error: expected primary-expression before ‘void’
+background/npinterface.cpp:43:17: error: expected primary-expression before ‘int’
+background/npinterface.cpp:43:17: error: expected primary-expression before ‘int’
+background/npinterface.cpp:43:17: error: expected primary-expression before ‘)’ token
+background/npinterface.cpp:43:17: error: expected ‘)’ before ‘PyArray_API’
+background/npinterface.cpp:51:13: error: ‘_strides’ was not declared in this scope
+background/npinterface.cpp: In member function ‘virtual void NumpyAllocator::deallocate(int*, uchar*, uchar*)’:
+background/npinterface.cpp:62:3: error: ‘PyObject’ was not declared in this scope
+background/npinterface.cpp:62:13: error: ‘o’ was not declared in this scope
+background/npinterface.cpp:62:46: error: ‘pyObjectFromRefcount’ was not declared in this scope
+background/npinterface.cpp:63:14: error: ‘Py_INCREF’ was not declared in this scope
+background/npinterface.cpp:64:14: error: ‘Py_DECREF’ was not declared in this scope
+background/npinterface.cpp: At global scope:
+background/npinterface.cpp:67:8: error: ‘PyObject’ does not name a type
+background/npinterface.cpp:80:30: error: ‘PyObject’ does not name a type
+background/npinterface.cpp:80:40: error: ISO C++ forbids declaration of ‘o’ with no type [-fpermissive]
+background/npinterface.cpp: In function ‘int pyopencv_to(const int*, cv::Mat&, const char*, bool)’:
+background/npinterface.cpp:80:100: error: default argument given for parameter 3 of ‘int pyopencv_to(const int*, cv::Mat&, const char*, bool)’ [-fpermissive]
+background/npinterface.h:78:12: error: after previous specification in ‘int pyopencv_to(const int*, cv::Mat&, const char*, bool)’ [-fpermissive]
+background/npinterface.cpp:80:100: error: default argument given for parameter 4 of ‘int pyopencv_to(const int*, cv::Mat&, const char*, bool)’ [-fpermissive]
+background/npinterface.h:78:12: error: after previous specification in ‘int pyopencv_to(const int*, cv::Mat&, const char*, bool)’ [-fpermissive]
+background/npinterface.cpp: In function ‘int pyopencv_to(const int*, cv::Mat&, const char*, bool)’:
+background/npinterface.cpp:83:19: error: ‘Py_None’ was not declared in this scope
+background/npinterface.cpp:90:10: error: ‘PyTypeObject’ was not declared in this scope
+background/npinterface.cpp:90:10: error: expected primary-expression before ‘)’ token
+background/npinterface.cpp:90:10: error: expected ‘)’ before ‘PyArray_API’
+background/npinterface.cpp:96:34: error: expected ‘)’ before ‘;’ token
+background/npinterface.cpp:97:16: error: ‘typenum’ was not declared in this scope
+background/npinterface.cpp:118:11: error: ‘npy_intp’ does not name a type
+background/npinterface.cpp:119:11: error: ‘npy_intp’ does not name a type
+background/npinterface.cpp:124:24: error: ‘_sizes’ was not declared in this scope
+background/npinterface.cpp:125:27: error: ‘_strides’ was not declared in this scope
+background/npinterface.cpp:153:32: error: ‘PyArrayObject’ has no member named ‘data’
+background/npinterface.cpp: At global scope:
+background/npinterface.cpp:173:8: error: ‘PyObject’ does not name a type
+/usr/include/python2.7/numpy/__multiarray_api.h:1532:1: warning: ‘int _import_array()’ defined but not used [-Wunused-function]
+background/npinterface.cpp:80:12: warning: ‘int pyopencv_to(const int*, cv::Mat&, const char*, bool)’ defined but not used [-Wunused-function]
+error: command 'gcc' failed with exit status 1

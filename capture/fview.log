@@ -1,0 +1,22 @@
+/usr/local/lib/python2.7/dist-packages/motmot.fview-0.6.8-py2.7.egg/motmot/fview/plugin_manager.py:48: UserWarning: could not load plugin (set env var FVIEW_RAISE_ERRORS to raise error) odor_control = motmot.control.control:OdorControl: No module named ui.api
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/motmot.fview-0.6.8-py2.7.egg/motmot/fview/plugin_manager.py", line 37, in load_plugins
+    PluginClass = entry_point.load()
+  File "/usr/lib/python2.7/dist-packages/pkg_resources.py", line 1989, in load
+    entry = __import__(self.module_name, globals(),globals(), ['__name__'])
+  File "/usr/local/lib/python2.7/dist-packages/motmot.control-0.0.1-py2.7.egg/motmot/control/control.py", line 8, in <module>
+    from traits.ui.api import View, Item, Group
+ImportError: No module named ui.api
+
+  formatted_error))
+/usr/local/lib/python2.7/dist-packages/motmot.fview-0.6.8-py2.7.egg/motmot/fview/plugin_manager.py:48: UserWarning: could not load plugin (set env var FVIEW_RAISE_ERRORS to raise error) control = motmot.control.control:OdorControl: No module named ui.api
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/motmot.fview-0.6.8-py2.7.egg/motmot/fview/plugin_manager.py", line 37, in load_plugins
+    PluginClass = entry_point.load()
+  File "/usr/lib/python2.7/dist-packages/pkg_resources.py", line 1989, in load
+    entry = __import__(self.module_name, globals(),globals(), ['__name__'])
+  File "/usr/local/lib/python2.7/dist-packages/motmot.control-0.0.1-py2.7.egg/motmot/control/control.py", line 8, in <module>
+    from traits.ui.api import View, Item, Group
+ImportError: No module named ui.api
+
+  formatted_error))
