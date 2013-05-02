@@ -16,6 +16,11 @@
 #include <zmq.hpp>
 #include <sstream>
 
+#include "zhelpers.hpp"
+
+#define SSTR( x ) dynamic_cast< std::ostringstream & >( \
+        ( std::ostringstream() << std::dec << x ) ).str()
+
 #define MAX_ODOURS_PER_LINE 5
 #define MAX_ODOUR_PORTS 8
 #define BITS_PER_PORT 8
@@ -136,7 +141,7 @@ int pulseSingleOdor(int odorNum, int stimTime, int delayTime, int blankOdor) {
 
 }
 
-int main(int argc, char** argv) {
+struct DeviceInfo* initDevice() {
   // Device initialization
   int MAX_NAME_SIZE = 20;
   char name[ MAX_NAME_SIZE + 2 ];
@@ -157,21 +162,22 @@ int main(int argc, char** argv) {
       printf("Error '%s' querying device at index %d. Check if firmware is loaded.\n", AIOUSB_GetResultCodeAsString( result ), device->index);
       AIOUSB_Exit();
     }
-  }
-  
+  } 
+  return device;
+}
+
+int main(int argc, char** argv) {
+  struct DeviceInfo* device = initDevice();
+   
   // main program
   AIOUSB_SetCommTimeout( device->index, 1000 );
   int tmp, ret;
   tmp = init();
-  int blank = -1;
 
   // init zmq and listen to port 5556 over TCP
   zmq::context_t context(1);
-  zmq::socket_t subscriber(context, ZMQ_SUB);
-  subscriber.connect("tcp://localhost:5556");
-
-  const char* filter ="";
-  subscriber.setsockopt(ZMQ_SUBSCRIBE, filter, strlen(filter));
+  zmq::socket_t server(context, ZMQ_REP);
+  server.bind("tcp://*:5556");
 
   // main loop:
   // Block until something is receieved on port 5556
@@ -181,13 +187,15 @@ int main(int argc, char** argv) {
   // the ODD. (Pretty simple.)
   int odor, stim, delay, blank;
   while (1) {
-    zmq::message_t update;
-    subscriber.recv(&update);
+    std::string request = s_recv(server);
     std::cout << "Received odor request at " << time(NULL) << std::endl;
-    std::istringstream iss(static_cast<char*>(update.data()));
-    std::cout << static_cast<char*>(update.data()) << std::endl;
+    std::istringstream iss(request);
+    std::cout << request << std::endl;
     iss >> odor >> stim >> delay >> blank;
     pulseSingleOdor(odor, stim, delay, blank);   
+    std::string reply = SSTR("Odor request complete at " << time(NULL));
+    std::cout << reply << std::endl;
+    s_send(server, reply);
   }
 
   return 0;
