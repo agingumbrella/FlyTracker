@@ -195,6 +195,7 @@ int main(int argc, char** argv) {
     pulseSingleOdor(odor, stim, delay, blank);   
     std::string reply = SSTR("Odor request complete at " << time(NULL));
     std::cout << reply << std::endl;
+    std::cout << "-------------------------------------" << std::endl;
     s_send(server, reply);
   }
 
