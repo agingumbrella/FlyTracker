@@ -144,6 +144,8 @@ class OdorControl(traited_plugin.HasTraits_FViewPlugin):
 
   def quit(self):
     pass
+    if self.save_to_disk:
+      self.log_file.close()
     if self.has_started and self.worker is not None:
       self.worker.join()
 
