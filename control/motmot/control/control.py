@@ -7,7 +7,7 @@ import motmot.fview.traited_plugin as traited_plugin
 import traits.api as traits
 import numpy as np
 from traitsui.api import View, Item, Group, FileEditor
-from multiprocessing import Process, Queue, log_to_stderr
+from multiprocessing import Process, Queue, Manager
 #from threading import Thread
 #from Queue import Queue
 
@@ -33,7 +33,10 @@ class ODDControlWorker(Process):
     self.save_to_disk = False
     self.log_file_name = ""
     self.log_file = None
+    return
 
+ # pass tuples (task_name, task_args) where task_args is a dict
+  def run(self):
     self.context = zmq.Context(1)
 
     self.client = self.context.socket(zmq.REQ)
@@ -42,19 +45,18 @@ class ODDControlWorker(Process):
     self.poll = zmq.Poller()
     self.poll.register(self.client, zmq.POLLIN)
 
-    time.sleep(1)
-    return
+#    time.sleep(1)
 
- # pass tuples (task_name, task_args) where task_args is a dict
-  def run(self):
     while True:
-      next_task_name, next_task_args = self.task_q.get()
-      if next_task_name == "quit":
-        self.context.term()
-        break
-      else:
-        task = getattr(self, next_task_name)
-        result = task(**next_task_args)
+      time.sleep(1)
+      print "Hello"
+#      next_task_name, next_task_args = self.task_q.get()
+#      if next_task_name == "quit":
+#        self.context.term()
+#        break
+#      else:
+#        task = getattr(self, next_task_name)
+#        result = task(**next_task_args)
 
   def open_log_file(self, log_fname):
     self.save_to_disk = True
@@ -135,6 +137,14 @@ class OdorControl(traited_plugin.HasTraits_FViewPlugin):
     self.delay = 0
     self.has_started = False
     print "Socket initialized on port 5556..."
+    self.has_started = True
+    self.manager = Manager()
+    self.q = self.manager.Queue()
+    self.worker = ODDControlWorker(self.q)
+    print "Worker process created..."
+    self.worker.daemon = True
+    self.worker.start()
+    print "Worker process initialized..."
 
   def _save_to_disk_changed(self):
     print "Changing save to disk"
@@ -162,12 +172,7 @@ class OdorControl(traited_plugin.HasTraits_FViewPlugin):
       self.worker.join()
 
   def camera_starting_notification(self, cam_id, pixel_format=None, max_width=None, max_height=None):
-    self.has_started = True
-    self.q = Queue()
-    self.worker = ODDControlWorker(self.q)
-    #self.worker.daemon = True
-    self.worker.start()
-    print "Camera starting..."
+    pass
 
   def process_frame(self, cam_id, buf, buf_offset, timestamp, framenumber):
     if framenumber == 0:
@@ -190,5 +195,4 @@ class OdorControl(traited_plugin.HasTraits_FViewPlugin):
           self.sending_odor = False
     self.last_trigger_timestamp[cam_id] = timestamp
     return draw_points, draw_linesegs
-
 
